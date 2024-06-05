@@ -3,7 +3,15 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-.venv/
+#venv
+bin/
+include/
+lib/
+var/
+lib64/
+pyvenv.cfg
+
+#db
 instance/
 short_url/__pycache__/
 
