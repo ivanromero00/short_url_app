@@ -9,14 +9,39 @@ from short_url.db import get_db
 bp = Blueprint('url', __name__)
 
 
-@bp.route('/')
+@bp.route('/', methods=('GET', 'POST'))
+def index_anonymous(short_url = None):
+	if request.method == 'POST':
+		long_url = request.form['long_url']
+		error = None
+
+		if not long_url:
+			error = 'La url es obligatoria.'
+
+		if error is not None:
+			flash(error)
+		else:
+			short_url = create_short_url(long_url)
+			db = get_db()
+			db.execute(
+				'INSERT INTO url (short_url, long_url)'
+				' VALUES (?, ?)',
+				(short_url, long_url)
+			)
+			db.commit()
+			return render_template('url/index_anonymous.html', short_url=short_url)
+
+	return render_template('url/index_anonymous.html', short_url=short_url)
+
+
+@bp.route('/my-urls')
 @login_required
 def index_logged():
 	db = get_db()
 	urls = db.execute(
-		'SELECT url.id, short_url, long_url, created, author_id, username'
+		'SELECT url.id, short_url, long_url, author_id, username'
 		' FROM url JOIN user u ON url.author_id = u.id'
-		' ORDER BY created DESC'
+		' ORDER BY url.id DESC'
 	).fetchall()
 	return render_template('url/index_logged.html', urls=urls)
 
@@ -89,7 +114,6 @@ def delete(id):
 
 
 @bp.route('/<short_url>', methods=('GET',))
-@login_required
 def redirect_to_url(short_url):
 	error = None
 
@@ -113,7 +137,7 @@ def redirect_to_url(short_url):
 
 def get_url(id, check_author=True):
 	url = get_db().execute(
-		'SELECT url.id, short_url, long_url, created, author_id, username'
+		'SELECT url.id, short_url, long_url, author_id, username'
 		' FROM url JOIN user u ON url.author_id = u.id'
 		' WHERE url.id = ?',
 		(id,)
