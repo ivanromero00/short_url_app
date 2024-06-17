@@ -1,16 +1,37 @@
 {% extends 'base.html' %}
 
-{% block header %}
-  <h1>{% block title %}New URL{% endblock %}</h1>
-{% endblock %}
-
 {% block content %}
-  <form method="post">
-    <label for="long_url">URL</label>
-    <input name="long_url" id="title" value="{{ request.form['long_url'] }}" required>
-    <input type="submit" value="Save">
-  </form>
-  {% if short_url != None %}
-    <p>{{ short_url }}</p>
-  {% endif %}
+	<h1>Crea URLs cortas y códigos QR</h1>
+	<p class="mt-3 mb-5">Puedes convertir cualquier URL en un enlace breve, perfecto 
+		para redes sociales, correos electrónicos y más. ¡Empieza a acortar 
+		tus enlaces hoy y mejora tu experiencia de compartir en línea!</p>
+	<form method="post">
+		<div class="input-group input-group-custom">
+			<input type="text" class="form-control" name="long_url" id="title" value="{{ request.form['long_url'] }}" required placeholder="Inserta el link para acortar...">
+			<div class="input-group-append">
+				<button class="btn" type="submit">
+					<img id="flecha" src="{{ url_for('static', filename='images/flecha.png') }}" alt="logo">
+				</button>
+			</div>
+		</div>
+	</form>
+	{% if short_url != None %}
+		<p>{{ short_url }}</p>
+	{% endif %}
+	<div class="row mt-5">
+		<div class="col d-flex flex-column">
+			<img class="imagenes mx-auto" src="{{ url_for('static', filename='images/tijeras.png')}}" alt="tijeras">
+			<h3 class="mt-2">Acorta tus links</h3>
+			<p>Transforma enlaces largos
+				en URLs breves y manejables
+				con un solo clic.</p>
+		</div>
+		<div class="col d-flex flex-column ps-5 border-start border-2 border-black">
+			<img class="imagenes mx-auto" src="{{ url_for('static', filename='images/qr-code.png')}}" alt="qr-code">
+			<h3 class="mt-2">Crea códigos QR</h3>
+			<p>Convierte tus enlaces en 
+				códigos QR para compartir de 
+				manera rápida y conveniente.</p>
+		</div>
+	</div>
 {% endblock %}

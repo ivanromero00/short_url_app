@@ -130,7 +130,10 @@ def redirect_to_url(short_url):
 			' WHERE url.short_url = ?',
 			(short_url,)
 			).fetchone()
-		return redirect(f"https://{url['long_url']}")
+		if not "http://" in url['long_url']:
+			return redirect(f"https://{url['long_url']}")
+		else:
+			return redirect(f"{url['long_url']}")
 
 
 

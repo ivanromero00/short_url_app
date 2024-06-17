@@ -1,27 +1,27 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}URLs{% endblock %}</h1>
-  {% if g.user %}
-	<a class="action" href="{{ url_for('url.create') }}">New</a>
-  {% endif %}
+	<h1>{% block title %}URLs{% endblock %}</h1>
+	{% if g.user %}
+		<a class="action" href="{{ url_for('url.create') }}">New</a>
+	{% endif %}
 {% endblock %}
 
 {% block content %}
-  {% for url in urls %}
-	<article class="post">
-	  <header>
-		<div>
-		  <h1><a class="action" href="{{ url_for('url.redirect_to_url', short_url=url['short_url']) }}">{{ url['long_url'] }}</a></h1>
-		  <div class="about">by {{ url['username'] }}</div>
-		</div>
-		{% if g.user['id'] == url['author_id'] %}
-		  <a class="action" href="{{ url_for('url.update', id=url['id']) }}">Edit</a>
+	{% for url in urls %}
+		<article class="post">
+			<header>
+			<div>
+				<h1><a class="action" href="{{ url_for('url.redirect_to_url', short_url=url['short_url']) }}">{{ url['long_url'] }}</a></h1>
+				<div class="about">by {{ url['username'] }}</div>
+			</div>
+				{% if g.user['id'] == url['author_id'] %}
+					<a class="action" href="{{ url_for('url.update', id=url['id']) }}">Edit</a>
+				{% endif %}
+			</header>
+		</article>
+		{% if not loop.last %}
+			<hr>
 		{% endif %}
-	  </header>
-	</article>
-	{% if not loop.last %}
-	  <hr>
-	{% endif %}
-  {% endfor %}
+	{% endfor %}
 {% endblock %}
